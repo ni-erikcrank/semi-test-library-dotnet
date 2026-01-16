@@ -33,7 +33,10 @@
     <Reference Include="NationalInstruments.ModularInstruments.NIDCPower.Fx40">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="NationalInstruments.ModularInstruments.NIDigital.Fx40">
+		<Reference Include="NationalInstruments.ModularInstruments.NIDCPower.Interfaces">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>C:\dev\erik-VirtualTestPOC\src\VirtualTest\NIDCPowerInterfaces\bin\Debug\NationalInstruments.ModularInstruments.NIDCPower.Interfaces.dll</HintPath>
+		</Reference> <Reference Include="NationalInstruments.ModularInstruments.NIDigital.Fx40">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="NationalInstruments.TestStand.SemiconductorModule.CodeModuleAPI">

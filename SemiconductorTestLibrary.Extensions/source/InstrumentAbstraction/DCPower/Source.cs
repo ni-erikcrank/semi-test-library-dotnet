@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using NationalInstruments.ModularInstruments.NIDCPower;
+using NationalInstruments.ModularInstruments.NIDCPower.Interfaces;
 using NationalInstruments.SemiconductorTestLibrary.Common;
 using NationalInstruments.SemiconductorTestLibrary.DataAbstraction;
 using NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCPower;
@@ -964,7 +965,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// Core implementation for forcing a current/voltage sequence.
         /// </summary>
         private static void ForceSequenceCore(
-            DCPowerOutput channelOutput,
+            IDCPowerOutput channelOutput,
             DCPowerSourceOutputFunction outputFunction,
             double[] levelSequence,
             double? limit,
@@ -1307,15 +1308,15 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
 
         #endregion methods on DCPowerSessionsBundle
 
-        #region methods on DCPowerOutput
+        #region methods on IDCPowerOutput
 
         /// <summary>
         /// Configures the current limit.
         /// </summary>
-        /// <param name="output">The <see cref="DCPowerOutput"/> object.</param>
+        /// <param name="output">The <see cref="IDCPowerOutput"/> object.</param>
         /// <param name="currentLimit">The current limit to set.</param>
         /// <param name="currentLimitRange">The current limit range to set. Use the absolute value of current limit to set current limit range when this parameter is not specified.</param>
-        public static void ConfigureCurrentLimit(this DCPowerOutput output, double currentLimit, double? currentLimitRange = null)
+        public static void ConfigureCurrentLimit(this IDCPowerOutput output, double currentLimit, double? currentLimitRange = null)
         {
             output.Source.Voltage.CurrentLimit = currentLimit;
             output.Source.Voltage.CurrentLimitRange = currentLimitRange ?? Math.Abs(currentLimit);
@@ -1324,11 +1325,11 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// <summary>
         /// Configures a hardware-timed sequence of values.
         /// </summary>
-        /// <param name="output">The <see cref="DCPowerOutput"/> object.</param>
+        /// <param name="output">The <see cref="IDCPowerOutput"/> object.</param>
         /// <param name="sequence">The voltage or current sequence to set.</param>
         /// <param name="sequenceLoopCount">The number of loops a sequence runs after initiation.</param>
         /// <param name="sequenceStepDeltaTimeInSeconds">The delta time between the start of two consecutive steps in a sequence.</param>
-        public static void ConfigureSequence(this DCPowerOutput output, double[] sequence, int sequenceLoopCount, double? sequenceStepDeltaTimeInSeconds = null)
+        public static void ConfigureSequence(this IDCPowerOutput output, double[] sequence, int sequenceLoopCount, double? sequenceStepDeltaTimeInSeconds = null)
         {
             output.Source.Mode = DCPowerSourceMode.Sequence;
             output.Source.SequenceLoopCount = sequenceLoopCount;
@@ -1343,11 +1344,11 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// <summary>
         /// Configures a hardware-timed sequence of values with per-step source delays.
         /// </summary>
-        /// <param name="output">The <see cref="DCPowerOutput"/> object.</param>
+        /// <param name="output">The <see cref="IDCPowerOutput"/> object.</param>
         /// <param name="sequence">The voltage or current sequence to set.</param>
         /// <param name="sequenceLoopCount">The number of loops a sequence runs after initiation.</param>
         /// <param name="sourceDelaysInSeconds">The array of source delays in seconds for each step in the sequence.</param>
-        public static void ConfigureSequence(this DCPowerOutput output, double[] sequence, int sequenceLoopCount, double[] sourceDelaysInSeconds)
+        public static void ConfigureSequence(this IDCPowerOutput output, double[] sequence, int sequenceLoopCount, double[] sourceDelaysInSeconds)
         {
             output.Source.Mode = DCPowerSourceMode.Sequence;
             output.Source.SequenceLoopCount = sequenceLoopCount;
@@ -1355,18 +1356,18 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             output.Source.SetSequence(sequence, sourceDelays);
         }
 
-        #endregion methods on DCPowerOutput
+        #endregion methods on IDCPowerOutput
 
-        #region methods on NIDCPower session
+        #region methods on INIDCPower session
 
         /// <summary>
         /// Configures the transient response.
         /// </summary>
-        /// <param name="session">The <see cref="NIDCPower"/> object.</param>
+        /// <param name="session">The <see cref="INIDCPower"/> object.</param>
         /// <param name="channelString">The channel string.</param>
         /// <param name="modelString">The DCPower instrument model <see cref="DCPowerModelStrings"/>.</param>
         /// <param name="transientResponse">The transient response to set.</param>
-        public static void ConfigureTransientResponse(this NIDCPower session, string channelString, string modelString, DCPowerSourceTransientResponse transientResponse)
+        public static void ConfigureTransientResponse(this INIDCPower session, string channelString, string modelString, DCPowerSourceTransientResponse transientResponse)
         {
             switch (modelString)
             {
@@ -1392,7 +1393,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             }
         }
 
-        #endregion methods on NIDCPower session
+        #endregion methods on INIDCPower session
 
         #region methods on DCPowerSessionInformation
 
@@ -1413,9 +1414,9 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// </summary>
         /// <param name="sessionInfo">The <see cref="DCPowerSessionInformation"/> object.</param>
         /// <param name="settings">The source settings to configure.</param>
-        /// <param name="channelOutput">The <see cref="DCPowerOutput"/> object.</param>
+        /// <param name="channelOutput">The <see cref="IDCPowerOutput"/> object.</param>
         /// <param name="sitePinInfo">The <see cref="SitePinInfo"/> object.</param>
-        public static void ConfigureSourceSettings(this DCPowerSessionInformation sessionInfo, DCPowerSourceSettings settings, DCPowerOutput channelOutput, SitePinInfo sitePinInfo)
+        public static void ConfigureSourceSettings(this DCPowerSessionInformation sessionInfo, DCPowerSourceSettings settings, IDCPowerOutput channelOutput, SitePinInfo sitePinInfo)
         {
             string channelString = string.IsNullOrEmpty(channelOutput.Name) ? sessionInfo.AllChannelsString : channelOutput.Name;
             if (sitePinInfo != null && channelString.Split(',').Length > 1)
@@ -1468,7 +1469,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             }
         }
 
-        private static void ConfigureLevelsAndLimits(this DCPowerOutput channelOutput, DCPowerSourceSettings settings, SitePinInfo sitePinInfo = null)
+        private static void ConfigureLevelsAndLimits(this IDCPowerOutput channelOutput, DCPowerSourceSettings settings, SitePinInfo sitePinInfo = null)
         {
             if (settings.LimitSymmetry.HasValue)
             {
@@ -1492,7 +1493,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             channelOutput.InitiateChannels(waitForSourceCompletion);
         }
 
-        private static void ConfigureChannels(this DCPowerSessionInformation sessionInfo, DCPowerSourceSettings settings, DCPowerOutput channelOutput, SitePinInfo sitePinInfo = null)
+        private static void ConfigureChannels(this DCPowerSessionInformation sessionInfo, DCPowerSourceSettings settings, IDCPowerOutput channelOutput, SitePinInfo sitePinInfo = null)
         {
             channelOutput.Control.Abort();
             sessionInfo.ConfigureSourceSettings(settings, channelOutput, sitePinInfo);
@@ -1500,7 +1501,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             channelOutput.Control.Commit();
         }
 
-        private static void InitiateChannels(this DCPowerOutput channelOutput, bool waitForSourceCompletion = false, double timeoutInSeconds = 5)
+        private static void InitiateChannels(this IDCPowerOutput channelOutput, bool waitForSourceCompletion = false, double timeoutInSeconds = 5)
         {
             channelOutput.Control.Initiate();
             if (waitForSourceCompletion)
@@ -1509,7 +1510,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             }
         }
 
-        internal static DCPowerOutput GetPrimaryOutput(this DCPowerSessionsBundle sessionsBundle, string triggerOrEventTypeName, out string terminalName)
+        internal static IDCPowerOutput GetPrimaryOutput(this DCPowerSessionsBundle sessionsBundle, string triggerOrEventTypeName, out string terminalName)
         {
             var masterChannelSessionInfo = sessionsBundle.InstrumentSessions.First();
             var masterChannelString = masterChannelSessionInfo.AssociatedSitePinList.First().IndividualChannelString;
@@ -1537,7 +1538,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             return sessionInfo.AllChannelsString.StartsWith(sitePinInfo.IndividualChannelString, StringComparison.InvariantCulture);
         }
 
-        private static void ConfigureVoltageSettings(DCPowerOutput dcOutput, DCPowerSourceSettings settings, SitePinInfo sitePinInfo = null)
+        private static void ConfigureVoltageSettings(IDCPowerOutput dcOutput, DCPowerSourceSettings settings, SitePinInfo sitePinInfo = null)
         {
             var currentLimitDivisor = (sitePinInfo?.CascadingInfo as GangingInfo)?.ChannelsCount ?? 1;
             dcOutput.Source.Output.Function = DCPowerSourceOutputFunction.DCVoltage;
@@ -1572,7 +1573,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             }
         }
 
-        private static void ConfigureCurrentSettings(DCPowerOutput dcOutput, DCPowerSourceSettings settings, SitePinInfo sitePinInfo = null)
+        private static void ConfigureCurrentSettings(IDCPowerOutput dcOutput, DCPowerSourceSettings settings, SitePinInfo sitePinInfo = null)
         {
             var currentLevelDivisor = (sitePinInfo?.CascadingInfo as GangingInfo)?.ChannelsCount ?? 1;
             dcOutput.Source.Output.Function = DCPowerSourceOutputFunction.DCCurrent;
@@ -1614,7 +1615,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
                 : Math.Max(Math.Abs(settings.LimitHigh.Value), Math.Abs(settings.LimitLow.Value));
         }
 
-        private static void ConfigureTriggerForGanging(this DCPowerOutput channelOutput, SitePinInfo sitePinInfo)
+        private static void ConfigureTriggerForGanging(this IDCPowerOutput channelOutput, SitePinInfo sitePinInfo)
         {
             if (IsFollowerOfGangedChannels(sitePinInfo.CascadingInfo))
             {

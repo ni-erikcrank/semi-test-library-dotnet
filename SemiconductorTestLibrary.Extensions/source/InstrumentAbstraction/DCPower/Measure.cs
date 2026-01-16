@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NationalInstruments.ModularInstruments.NIDCPower;
+using NationalInstruments.ModularInstruments.NIDCPower.Interfaces;
 using NationalInstruments.SemiconductorTestLibrary.Common;
 using NationalInstruments.SemiconductorTestLibrary.DataAbstraction;
 using static NationalInstruments.SemiconductorTestLibrary.Common.ParallelExecution;
@@ -423,13 +424,13 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// <summary>
         /// Configures the aperture time.
         /// </summary>
-        /// <param name="session">The <see cref="NIDCPower"/> object.</param>
+        /// <param name="session">The <see cref="INIDCPower"/> object.</param>
         /// <param name="channelString">The channel string.</param>
         /// <param name="modelString">The DCPower instrument model.</param>
         /// <param name="powerLineFrequency">The power line frequency used to calculate aperture time value from power line cycles to seconds. This is used just for PXI-4110, PXI-4130, and PXIe-4154 models since they don't support power line frequency property.</param>
         /// <param name="apertureTime">The aperture time to set.</param>
         /// <param name="apertureTimeUnits">The aperture time units to set.</param>
-        public static void ConfigureApertureTime(this NIDCPower session, string channelString, string modelString, double powerLineFrequency, double apertureTime, DCPowerMeasureApertureTimeUnits? apertureTimeUnits)
+        public static void ConfigureApertureTime(this INIDCPower session, string channelString, string modelString, double powerLineFrequency, double apertureTime, DCPowerMeasureApertureTimeUnits? apertureTimeUnits)
         {
             switch (modelString)
             {
@@ -456,11 +457,11 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// <summary>
         /// Configures the aperture time units.
         /// </summary>
-        /// <param name="session">The <see cref="NIDCPower"/> object.</param>
+        /// <param name="session">The <see cref="INIDCPower"/> object.</param>
         /// <param name="channelString">The channel string.</param>
         /// <param name="modelString">The DCPower instrument model.</param>
         /// <param name="apertureTimeUnits">The aperture time units to set.</param>
-        public static void ConfigureApertureTimeUnits(this NIDCPower session, string channelString, string modelString, DCPowerMeasureApertureTimeUnits apertureTimeUnits)
+        public static void ConfigureApertureTimeUnits(this INIDCPower session, string channelString, string modelString, DCPowerMeasureApertureTimeUnits apertureTimeUnits)
         {
             if (modelString == DCPowerModelStrings.PXI_4110
                 || modelString == DCPowerModelStrings.PXI_4130
@@ -475,11 +476,11 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// <summary>
         /// Configures the MeasurementWhen property.
         /// </summary>
-        /// <param name="session">The <see cref="NIDCPower"/> object.</param>
+        /// <param name="session">The <see cref="INIDCPower"/> object.</param>
         /// <param name="channelString">The channel string.</param>
         /// <param name="modelString">The DCPower instrument model.</param>
         /// <param name="measureWhen">The measurement when to set.</param>
-        public static void ConfigureMeasureWhen(this NIDCPower session, string channelString, string modelString, DCPowerMeasurementWhen measureWhen)
+        public static void ConfigureMeasureWhen(this INIDCPower session, string channelString, string modelString, DCPowerMeasurementWhen measureWhen)
         {
             if (modelString == DCPowerModelStrings.PXI_4110
                 || modelString == DCPowerModelStrings.PXI_4130
@@ -494,11 +495,11 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// <summary>
         /// Configures the measurement sense.
         /// </summary>
-        /// <param name="session">The <see cref="NIDCPower"/> object.</param>
+        /// <param name="session">The <see cref="INIDCPower"/> object.</param>
         /// <param name="channelString">The channel string.</param>
         /// <param name="modelString">The DCPower instrument model.</param>
         /// <param name="sense">The measurement sense to set.</param>
-        public static void ConfigureMeasurementSense(this NIDCPower session, string channelString, string modelString, DCPowerMeasurementSense sense)
+        public static void ConfigureMeasurementSense(this INIDCPower session, string channelString, string modelString, DCPowerMeasurementSense sense)
         {
             switch (modelString)
             {
@@ -522,7 +523,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             }
         }
 
-        #endregion methods on NIDCPower session
+        #endregion methods on INIDCPower session
 
         #region methods on DCPowerSessionInformation
 
@@ -625,7 +626,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             }
         }
 
-        private static void ConfigureMeasureSettings(this NIDCPower session, string channelString, string modelString, double powerLineFrequency, DCPowerMeasureSettings settings)
+        private static void ConfigureMeasureSettings(this INIDCPower session, string channelString, string modelString, double powerLineFrequency, DCPowerMeasureSettings settings)
         {
             if (settings.ApertureTime.HasValue)
             {
@@ -665,7 +666,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             }
         }
 
-        private static DCPowerWaveformAcquisitionSettings GetOriginalSettings(NIDCPower session, string channelString)
+        private static DCPowerWaveformAcquisitionSettings GetOriginalSettings(INIDCPower session, string channelString)
         {
             var channelOutput = session.Outputs[channelString];
             return new DCPowerWaveformAcquisitionSettings()
@@ -677,7 +678,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             };
         }
 
-        private static void ApplyOriginalSettings(NIDCPower session, string channelString, DCPowerWaveformAcquisitionSettings settings)
+        private static void ApplyOriginalSettings(INIDCPower session, string channelString, DCPowerWaveformAcquisitionSettings settings)
         {
             var channelOutput = session.Outputs[channelString];
             channelOutput.Control.Abort();
@@ -689,7 +690,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             channelOutput.Control.Initiate();
         }
 
-        private static void ConfigureAndInitiate(NIDCPower session, string channelString, double sampleRate, double bufferLength)
+        private static void ConfigureAndInitiate(INIDCPower session, string channelString, double sampleRate, double bufferLength)
         {
             var channelOutput = session.Outputs[channelString];
             channelOutput.Control.Abort();
@@ -712,7 +713,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
             channelOutput.Triggers.MeasureTrigger.SendSoftwareEdgeTrigger();
         }
 
-        private static DCPowerWaveformResults Fetch(NIDCPower session, string channelString, double fetchWaveformLength)
+        private static DCPowerWaveformResults Fetch(INIDCPower session, string channelString, double fetchWaveformLength)
         {
             var channelOutput = session.Outputs[channelString];
             var deltaTime = channelOutput.Measurement.RecordDeltaTime;

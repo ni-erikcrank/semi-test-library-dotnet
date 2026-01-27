@@ -1,4 +1,5 @@
 ﻿using NationalInstruments.ModularInstruments.NIDCPower;
+using NationalInstruments.ModularInstruments.NIDCPower.Interfaces;
 
 namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCPower
 {
@@ -168,7 +169,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// <summary>
         /// The DCPower fetch result.
         /// </summary>
-        public DCPowerFetchResult Result { get; }
+        public IDCPowerFetchResult Result { get; }
 
         /// <summary>
         /// The measurement record delta time.
@@ -180,7 +181,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// </summary>
         /// <param name="result">The DCPower fetch result.</param>
         /// <param name="deltaTime">The measurement record delta time.</param>
-        public DCPowerWaveformResults(DCPowerFetchResult result, double deltaTime)
+        public DCPowerWaveformResults(IDCPowerFetchResult result, double deltaTime)
         {
             Result = result;
             DeltaTime = deltaTime;

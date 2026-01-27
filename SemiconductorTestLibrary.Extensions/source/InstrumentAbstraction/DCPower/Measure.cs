@@ -318,7 +318,7 @@ namespace NationalInstruments.SemiconductorTestLibrary.InstrumentAbstraction.DCP
         /// <param name="apertureTimeInSeconds">The measurement aperture time in seconds.</param>
         /// <param name="measurementTimeInSeconds">The measurement time in seconds.</param>
         /// <returns>The per-site per-pin waveform results.</returns>
-        public static PinSiteData<DCPowerFetchResult> AcquireSynchronizedWaveforms(this DCPowerSessionsBundle sessionsBundle, double apertureTimeInSeconds = 0, double measurementTimeInSeconds = 0)
+        public static PinSiteData<IDCPowerFetchResult> AcquireSynchronizedWaveforms(this DCPowerSessionsBundle sessionsBundle, double apertureTimeInSeconds = 0, double measurementTimeInSeconds = 0)
         {
             var masterChannelOutput = sessionsBundle.GetPrimaryOutput(TriggerType.MeasureTrigger.ToString(), out string measureTrigger);
             var originalApertureTimes = new Dictionary<string, double>();
